@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'SMS-WebUI-Angular';
+  title = 'SMS Projects with Angular 7';
 }
