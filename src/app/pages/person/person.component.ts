@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
 import { PersonService } from 'src/app/services/person.service';
-import { Person } from 'src/app/shared/person';
 
 @Component({
   selector: 'app-person',
@@ -10,24 +7,36 @@ import { Person } from 'src/app/shared/person';
   styleUrls: ['./person.component.scss']
 })
 export class PersonComponent implements OnInit {
-  Person: Person[];                 // Save students data in Student's array.
+  constructor(private personService: PersonService ) {  }
 
-  constructor(private personService: PersonService ) {
-
-  }
+  submitted: boolean;
+  showSuccessMessage: boolean;
+  formControls = this.personService.form.controls;
 
   ngOnInit() {
-    let s = this.personService.GetPersonsList();
-    this.Person = [];
-    s.snapshotChanges().subscribe(data => { // Using snapshotChanges() method to retrieve list of data along with metadata($key)
-      data.forEach(item => {
-        let a = item.payload.toJSON();
-        a['$key'] = item.key;
-        console.log('item:' + a['$key']); 
-        this.Person.push(a as Person);
+  }
+
+  onSubmit() {
+    this.submitted = true;
+    if (this.personService.form.valid) {
+      if (this.personService.form.get('$key').value == null) {
+        this.personService.addPerson(this.personService.form.value);
+      } else {
+        this.personService.updatePerson(this.personService.form.value);
+      }
+      this.showSuccessMessage = true;
+      setTimeout(() => this.showSuccessMessage = false, 3000);
+      this.submitted = false;
+      this.personService.form.reset();
+      // Reset Form
+      this.personService.form.setValue({
+        $key: null,
+        firstName: '',
+        lastName: '',
+        email: '',
+        mobileNumber: ''
       });
-    });
-    console.log(this.Person);
+    }
   }
 
 }

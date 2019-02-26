@@ -1,19 +1,26 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/database';
 import { Person } from '../shared/person';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PersonService {
-  personsRef: AngularFireList<any>;    // Reference to Person data list, its an Observable
-  personRef: AngularFireObject<any>;   // Reference to Person object, its an Observable too
+  personList: AngularFireList<any>;    // List
 
   constructor(private db: AngularFireDatabase) { }
 
-  // Create Person
-  AddPerson(person: Person) {
-    this.personsRef.push({
+  form = new FormGroup({
+    $key: new FormControl(null),
+    firstName: new FormControl('', Validators.required),
+    lastName: new FormControl('', Validators.required),
+    email: new FormControl('', Validators.email),
+    mobileNumber: new FormControl('', [Validators.required, Validators.minLength(8)]),
+  });
+
+  addPerson(person: Person) {
+    this.personList.push({
       firstName: person.firstName,
       lastName: person.lastName,
       email: person.email,
@@ -21,32 +28,27 @@ export class PersonService {
     });
   }
 
-  // Fetch Single Person Object
-  GetPerson(id: string) {
-    this.personRef = this.db.object('persons-list/' + id);
-    return this.personRef;
+  getPersonsList() {
+    this.personList = this.db.list('/api/Person');
+    return this.personList.snapshotChanges();
   }
 
-  // Fetch Persons List
-  GetPersonsList(): AngularFireList<any[]> {
-    this.personsRef = this.db.list('data/person');
-    return this.personsRef;
+  updatePerson(person: Person) {
+    this.personList.update(person.$key,
+      {
+        firstName: person.firstName,
+        lastName: person.lastName,
+        email: person.email,
+        mobileNumber: person.mobileNumber
+      });
   }
 
-  // Update Person Object
-  UpdatePerson(person: Person) {
-    this.personRef.update({
-      firstName: person.firstName,
-      lastName: person.lastName,
-      email: person.email,
-      mobileNumber: person.mobileNumber
-    });
+  deletePerson($key: string) {
+    this.personList.remove($key);
   }
 
-  // Delete Person Object
-  DeletePerson(id: string) {
-    this.personRef = this.db.object('persons-list/' + id);
-    this.personRef.remove();
+  populateForm(person) {
+    this.form.setValue(person);
   }
 
 }
