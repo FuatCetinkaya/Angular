@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { environment } from '../environments/environment';
+import { environment } from 'src/environments/environment';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 // Firebase Modules
