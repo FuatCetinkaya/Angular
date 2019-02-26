@@ -1,6 +1,5 @@
 # Demo
-[Demo Link](https://codesandbox.io/s/github/FuatCetinkaya/Angular)
-[Alternative Demo Link](https://stackblitz.com/github/FuatCetinkaya/Angular)
+Demo Link Online IDE for web app (Stackblitz) :  [Demo Link](https://stackblitz.com/github/FuatCetinkaya/Angular)
 
 # SMSWebUIAngular
 
@@ -34,4 +33,3 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 Proje Test amaçlı Angular kodlarını basitce görebilmek için yazılmıştır. 
 
-## VS Code GitHub Wizard
